@@ -1,0 +1,13 @@
+crewai
+langchain
+langchain-community
+streamlit
+chromadb
+pypdf
+python-dotenv
+openai
+litellm
+pydantic
+langchain-google-genai
+google-generativeai
+google-genai
