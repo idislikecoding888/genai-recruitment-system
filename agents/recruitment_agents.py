@@ -2,6 +2,7 @@ from config import AGENT_CONFIG
 from crewai import Agent
 
 class RecruitmentAgents:
+
     def talent_acquisition_manager(self):
         """Overall owner for the TA function."""
         return Agent(
@@ -45,5 +46,61 @@ class RecruitmentAgents:
             backstory="""You are the face of the company to the candidate. 
             You write personalized outreach messages, answer candidate queries, 
             and coordinate interview slots between recruiters and talent.""",
+            **AGENT_CONFIG
+        )
+
+    # ---------------- NEW AGENTS ---------------- #
+
+    def fairness_agent(self):
+        """Detects bias in hiring decisions."""
+        return Agent(
+            role='Fair Hiring Auditor',
+            goal='Detect bias in recruitment decisions and ensure ethical hiring practices.',
+            backstory="""You specialize in ethical AI recruitment. You analyze hiring 
+            patterns to detect gender bias, university bias, name bias, and unfair 
+            experience requirements.""",
+            **AGENT_CONFIG
+        )
+
+    def analytics_agent(self):
+        """Generates recruitment insights and hiring metrics."""
+        return Agent(
+            role='Talent Analytics Specialist',
+            goal='Analyze recruitment data to generate hiring insights and metrics.',
+            backstory="""You transform recruitment pipeline data into actionable 
+            insights. You track metrics like time-to-hire, candidate drop-off rates, 
+            source effectiveness, and interview success rates.""",
+            **AGENT_CONFIG
+        )
+
+    def market_predictor_agent(self):
+        """Predicts hiring difficulty and market supply."""
+        return Agent(
+            role='Talent Market Intelligence Analyst',
+            goal='Predict hiring difficulty and talent availability in the market.',
+            backstory="""You analyze job market signals, skill demand trends, 
+            and hiring competition to predict how difficult it will be to hire.""",
+            **AGENT_CONFIG
+        )
+
+    def onboarding_agent(self):
+        """Handles offer letter generation and onboarding workflow."""
+        return Agent(
+            role='Offer & Onboarding Specialist',
+            goal='Generate offer letters and manage candidate onboarding workflow.',
+            backstory="""You manage the final step of hiring. You prepare offer 
+            packages, benchmark salaries, and ensure smooth transition from 
+            candidate to employee.""",
+            **AGENT_CONFIG
+        )
+
+    def explainability_agent(self):
+        """Explains hiring decisions transparently."""
+        return Agent(
+            role='Explainable AI Hiring Analyst',
+            goal='Provide transparent explanations for hiring decisions.',
+            backstory="""You specialize in Explainable AI. When a candidate is 
+            rejected or shortlisted, you clearly explain the reasoning such as 
+            skill mismatch, experience gap, or qualification differences.""",
             **AGENT_CONFIG
         )
