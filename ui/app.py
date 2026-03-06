@@ -184,6 +184,11 @@ with st.sidebar:
     st.caption("✅ Sourcing Agent (Market Intelligence)")
     st.caption("✅ Screening Agent (NLP Assessment)")
     st.caption("✅ Candidate Experience Agent (Engagement & Scheduling)")
+    st.caption("🧠 Bias Detection Agent (Fair Hiring)")
+    st.caption("📊 Talent Analytics Agent (Hiring Insights)")
+    st.caption("📈 Talent Market Predictor (Supply Intelligence)")
+    st.caption("📄 Offer & Onboarding Agent")
+    st.caption("🔍 Explainable AI Agent (Decision Transparency)")
 
 # --- Initialize Session State ---
 if "chat_history" not in st.session_state:
