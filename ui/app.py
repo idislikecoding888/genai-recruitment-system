@@ -119,35 +119,65 @@ html, body, [class*="css"] {
 # --- Header ---
 st.markdown('<h1 class="main-header">Smart Hire</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">AI-Powered Recruitment Intelligence Platform</p>', unsafe_allow_html=True)
+import re
 
+match_score = "--"
+hiring_difficulty = "Pending"
+
+if "last_result" in st.session_state and st.session_state.last_result:
+
+    report_text = st.session_state.last_result.raw
+
+    # extract score like 85%
+    score_match = re.search(r"(\d+)%", report_text)
+    if score_match:
+        match_score = score_match.group(1) + "%"
+
+    # extract hiring difficulty
+    difficulty_match = re.search(r"Hiring Difficulty:\s*(\w+)", report_text)
+    if difficulty_match:
+        hiring_difficulty = difficulty_match.group(1)
+# --- Metrics Row ---
 # --- Metrics Row ---
 
-vault_data = get_all_vault_resumes()
+metric1, metric2, metric3 = st.columns(3)
 
+# Get candidate count safely
+vault_data = get_all_vault_resumes()
 candidate_count = 0
-if vault_data and "documents" in vault_data and vault_data["documents"]:
+
+if vault_data and "documents" in vault_data:
     candidate_count = len(vault_data["documents"])
 
-metric1, metric2, metric3 = st.columns(3)
+# Default values
+match_score = "--"
+hiring_difficulty = "Pending"
+
+# Only try extracting if analysis exists
+if "last_result" in st.session_state and st.session_state.last_result:
+    report_text = str(st.session_state.last_result.raw)
+
+    import re
+
+    score_match = re.search(r"(\d+)%", report_text)
+    if score_match:
+        match_score = score_match.group(1) + "%"
+
+    difficulty_match = re.search(r"(Low|Medium|High)", report_text)
+    if difficulty_match:
+        hiring_difficulty = difficulty_match.group(1)
 
 with metric1:
     st.metric("Candidates Processed", candidate_count)
 
-if "last_result" in st.session_state and st.session_state.last_result:
-    with metric2:
-        st.metric("Avg Match Score", "Generated")
+with metric2:
+    st.metric("Match Score", match_score)
 
-    with metric3:
-        st.metric("Hiring Difficulty", "Predicted")
-else:
-    with metric2:
-        st.metric("Avg Match Score", "--")
+with metric3:
+    st.metric("Hiring Difficulty", hiring_difficulty)
 
-    with metric3:
-        st.metric("Hiring Difficulty", "Pending")
-
-# divider below metrics
 st.markdown("---")
+
 # --- Sidebar ---
 with st.sidebar:
     st.image("https://img.icons8.com/fluency/200/artificial-intelligence.png", width=120)
