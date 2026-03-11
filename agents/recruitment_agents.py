@@ -104,3 +104,17 @@ class RecruitmentAgents:
             skill mismatch, experience gap, or qualification differences.""",
             **AGENT_CONFIG
         )
+    
+    def all_agents(self):
+        """Return all agents as a list."""
+        return [
+            self.talent_acquisition_manager(),
+            self.sourcing_agent(),
+            self.screening_agent(),
+            self.engagement_scheduling_agent(),
+            self.fairness_agent(),
+            self.analytics_agent(),
+            self.market_predictor_agent(),
+            self.onboarding_agent(),
+            self.explainability_agent()
+        ]
