@@ -11,3 +11,4 @@ litellm
 boto3
 pydantic
 sentence-transformers
+pandas
