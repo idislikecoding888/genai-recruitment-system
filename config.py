@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 # Disable CrewAI telemetry immediately
 os.environ["CREWAI_DISABLE_TELEMETRY"] = "true"
 
-from crewai.llm import LLM
+#from crewai import LLM
 
 # Load environment variables from .env file
 load_dotenv()
@@ -24,11 +24,11 @@ os.environ["GEMINI_API_KEY"] = GOOGLE_API_KEY
 
 # Using CrewAI's native LLM wrapper for Gemini
 # Using Gemini 2.0 Flash which is confirmed available and stable in your environment.
-llm = LLM(
+'''llm = LLM(
     model="gemini/gemini-2.5-flash",
     temperature=0.4,
     api_key=GOOGLE_API_KEY
-)
+)'''
 
 # Configuration for CrewAI Agents
 AGENT_CONFIG = {
