@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 # Disable CrewAI telemetry immediately
 os.environ["CREWAI_DISABLE_TELEMETRY"] = "true"
 
-from crewai import LLM
+from crewai.llm import LLM
 
 # Load environment variables from .env file
 load_dotenv()
