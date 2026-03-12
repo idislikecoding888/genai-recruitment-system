@@ -9,5 +9,5 @@ openai
 litellm
 pydantic
 langchain-google-genai
-google-generativeai
 google-genai
+boto3
