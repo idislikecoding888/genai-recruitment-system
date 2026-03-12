@@ -351,7 +351,6 @@ if app_mode == "🚀 New Analysis":
 
                 if st.button("💾 Save Candidate to Vault"):
 
-<<<<<<< HEAD
                     import re
 
                     report_text = str(st.session_state.last_result.raw)
@@ -364,11 +363,6 @@ if app_mode == "🚀 New Analysis":
                         "role": job_desc[:50],
                         "source": st.session_state.get('current_filename', 'uploaded_resume'),
                         "ai_score": ai_score,
-=======
-                    meta = {
-                        "role": job_desc[:50],
-                        "source": st.session_state.get('current_filename', 'uploaded_resume'),
->>>>>>> cd8eeba007a0681999f56a0cf290ab814c758dcb
                         "timestamp": time.time()
                     }
 
@@ -403,7 +397,6 @@ elif app_mode == "🗄️ Resume Vault":
         if results and results['documents']:
 
             for i, doc in enumerate(results['documents'][0]):
-<<<<<<< HEAD
 
                 similarity = round(1 - results["distances"][0][i], 2)
 
@@ -416,11 +409,6 @@ elif app_mode == "🗄️ Resume Vault":
 
                 with st.expander(
                     f"📄 Candidate {i+1} | AI Score: {ai_score_display} | Search Similarity: {similarity}"
-=======
-
-                with st.expander(
-                    f"📄 Candidate {i+1} | Match Score: {round(1-results['distances'][0][i], 2)}"
->>>>>>> cd8eeba007a0681999f56a0cf290ab814c758dcb
                 ):
                     st.markdown(doc)
                     st.caption(f"Metadata: {results['metadatas'][0][i]}")
