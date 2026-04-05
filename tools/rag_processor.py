@@ -1,6 +1,6 @@
 import os
 import chromadb
-from google import genai
+import google.generativeai as genai
 from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
 from config import GOOGLE_API_KEY
 import boto3
@@ -10,17 +10,16 @@ s3 = boto3.client("s3")
 
 
 class GoogleGenAIEmbeddingFunction(EmbeddingFunction):
-    def __init__(self, api_key, model_name="models/gemini-embedding-001"):
-        self.client = genai.Client(api_key=api_key)
+    def __init__(self, api_key, model_name="models/embedding-001"):
+        genai.configure(api_key=api_key)
         self.model_name = model_name
 
     def __call__(self, input: Documents) -> Embeddings:
-        response = self.client.models.embed_content(
+        response = genai.embed_content(
             model=self.model_name,
-            contents=input
+            content=input
         )
-        return [e.values for e in response.embeddings]
-
+        return [response["embedding"]]
 
 class ResumeVault:
     def __init__(self, persist_directory="./db/resume_vault"):
