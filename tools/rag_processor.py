@@ -10,16 +10,22 @@ s3 = boto3.client("s3")
 
 
 class GoogleGenAIEmbeddingFunction(EmbeddingFunction):
-    def __init__(self, api_key, model_name="models/embedding-001"):
+    def __init__(self, api_key):
+        import google.generativeai as genai
         genai.configure(api_key=api_key)
-        self.model_name = model_name
+        self.genai = genai
 
     def __call__(self, input: Documents) -> Embeddings:
-        response = genai.embed_content(
-            model=self.model_name,
-            content=input
-        )
-        return [response["embedding"]]
+        embeddings = []
+
+        for text in input:
+            response = self.genai.embed_content(
+                model="models/text-embedding-004",  # ✅ FIXED MODEL
+                content=text
+            )
+            embeddings.append(response["embedding"])
+
+        return embeddings
 
 class ResumeVault:
     def __init__(self, persist_directory="./db/resume_vault"):
