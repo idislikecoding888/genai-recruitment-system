@@ -1,36 +1,40 @@
 import os
 import chromadb
-from chromadb.api.types import Documents, Embeddings
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+import google.generativeai as genai
+from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
 from config import GOOGLE_API_KEY
 import boto3
 
-# ---------- S3 CONFIG ----------
 S3_BUCKET = "resume-rag-storage-preena-2026"
 s3 = boto3.client("s3")
 
 
-# ---------- EMBEDDING WRAPPER ----------
-class ChromaLangchainEmbeddingFunction:
+class GoogleGenAIEmbeddingFunction(EmbeddingFunction):
     def __init__(self, api_key):
-        self.embedder = GoogleGenerativeAIEmbeddings(
-            model="models/embedding-001",
-            google_api_key=api_key
-        )
+        import google.generativeai as genai
+        genai.configure(api_key=api_key)
+        self.genai = genai
 
     def __call__(self, input: Documents) -> Embeddings:
-        # Chroma expects list of vectors
-        return self.embedder.embed_documents(input)
+        embeddings = []
 
+        for text in input:
+            response = self.genai.embed_content(
+                model="models/text-embedding-004",  # ✅ FIXED MODEL
+                content=text
+            )
+            embeddings.append(response["embedding"])
 
-# ---------- VAULT ----------
+        return embeddings
+
 class ResumeVault:
     def __init__(self, persist_directory="./db/resume_vault"):
         os.makedirs(persist_directory, exist_ok=True)
 
+        self.persist_directory = persist_directory
         self.client = chromadb.PersistentClient(path=persist_directory)
 
-        self.embedding_function = ChromaLangchainEmbeddingFunction(
+        self.embedding_function = GoogleGenAIEmbeddingFunction(
             api_key=GOOGLE_API_KEY
         )
 
@@ -45,7 +49,6 @@ class ResumeVault:
         resume_id = metadata.get("id", os.urandom(4).hex())
         file_name = f"{resume_id}.txt"
 
-        # Upload to S3
         try:
             s3.put_object(
                 Bucket=S3_BUCKET,
@@ -57,7 +60,6 @@ class ResumeVault:
 
         metadata["s3_url"] = f"https://{S3_BUCKET}/{file_name}"
 
-        # Store in Chroma
         self.collection.add(
             documents=[resume_text],
             metadatas=[metadata],
@@ -67,10 +69,11 @@ class ResumeVault:
         return resume_id
 
     def search_similar_resumes(self, query_text, n_results=3):
-        return self.collection.query(
+        results = self.collection.query(
             query_texts=[query_text],
             n_results=n_results
         )
+        return results
 
     def get_all_resumes(self):
         return self.collection.get()
@@ -86,5 +89,5 @@ class ResumeVault:
         return True
 
 
-# ---------- GLOBAL INSTANCE ----------
+# Global instance
 vault = ResumeVault()
